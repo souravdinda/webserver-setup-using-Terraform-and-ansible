@@ -1,0 +1,19 @@
+- hosts: tag_Name_webserver
+  tasks:
+  - package:
+            name: "httpd"
+            state: present
+
+  - shell: "{{ item }}"
+    loop:
+            - "sudo mkfs.ext4 /dev/xvdh"
+            - "sudo mount /dev/xvdh /var/www/html/"
+            - " cat 'sudo mount /dev/xvdh /var/www/html/'  >> /root/.bashrc"
+  - copy:
+            src: "index.html"
+            dest: "/var/www/html"
+  - service:
+            name: "httpd"
+            state: started
+            enabled: yes
+
