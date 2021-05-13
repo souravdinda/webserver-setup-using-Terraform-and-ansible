@@ -3,15 +3,25 @@
   - package:
             name: "httpd"
             state: present
-
-  - shell: "{{ item }}"
-    loop:
-            - "sudo mkfs.ext4 /dev/xvdh"
-            - "sudo mount /dev/xvdh /var/www/html/"
-            - " cat 'sudo mount /dev/xvdh /var/www/html/'  >> /root/.bashrc"
+  
+  - parted:
+          device: /dev/xvdh
+          number: 1
+          state: present
+          fs_type: ext4
+  
+  - filesystem:
+          fstype: ext4
+          dev: /dev/xvdh
+  - mount:
+          path: /var/www/html/
+          src: /dev/xvdh
+          fstype: ext4
+          state: mounted
+              
   - copy:
             src: "index.html"
-            dest: "/var/www/html"
+            dest: "/var/www/html/"
   - service:
             name: "httpd"
             state: started
